@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Text.Json;
+using System.Collections.Generic;
 using ModelContextProtocol.Server;
 
 namespace Ado.Mcp.Tools
@@ -21,7 +22,13 @@ namespace Ado.Mcp.Tools
         [McpServerTool, Description("Batch get work items (max 200)")]
         public static async Task<string> get_work_items_batch(AdoClient ado, int[] ids, string[]? fields = null, string expand = "Relations", CancellationToken ct = default)
         {
-            var body = new { ids, fields, $expand = expand };
+            // Use a dictionary to allow property names like "$expand" in the JSON payload.
+            var body = new Dictionary<string, object?>
+            {
+                ["ids"] = ids,
+                ["fields"] = fields,
+                ["$expand"] = expand
+            };
             return await (await ado.WorkItemsBatchAsync(body, ct)).Content.ReadAsStringAsync(ct);
         }
 
