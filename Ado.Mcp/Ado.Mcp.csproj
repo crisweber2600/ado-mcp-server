@@ -7,14 +7,6 @@
     <RootNamespace>Ado.Mcp</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include=".\Ado.Mcp.ServiceDefaults\Ado.Mcp.ServiceDefaults.csproj" />
-  </ItemGroup>
-
   <!-- Include MCP packages only in Release to avoid heavy preview dependencies during Debug/test runs -->
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
     <PackageReference Include="ModelContextProtocol" Version="0.1.0-preview.14" />
@@ -36,6 +28,9 @@
   <Compile Remove="Ado.Mcp.ServiceDefaults\**\*.cs" />
   <None Remove="Ado.Mcp.ServiceDefaults\**\*" />
   <Content Remove="Ado.Mcp.ServiceDefaults\**\*" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ado.Mcp.ServiceDefaults\Ado.Mcp.ServiceDefaults.csproj" />
   </ItemGroup>
 
 </Project>
