@@ -1,0 +1,17 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schemas/draft/2025-07-09/server.json",
+  "name": "io.github.yourname/ado-mcp",
+  "description": "Azure DevOps work item tools for MCP clients",
+  "packages": [
+    {
+      "registry_name": "nuget",
+      "name": "Ado.Mcp",
+      "version": "0.1.0",
+      "environment_variables": [
+        { "name": "ADO_ORG", "value": "{org}", "variables": { "org": { "description": "ADO org", "is_required": true } } },
+        { "name": "ADO_PROJECT", "value": "{project}", "variables": { "project": { "description": "ADO project", "is_required": true } } },
+        { "name": "ADO_PAT", "value": "{pat}", "variables": { "pat": { "description": "PAT with vso.work or vso.work_write", "is_required": true, "is_secret": true } } }
+      ]
+    }
+  ]
+}
