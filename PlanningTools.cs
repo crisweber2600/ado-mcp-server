@@ -5,6 +5,8 @@ using Ado.Mcp.Models;
 
 namespace Ado.Mcp.Tools
 {
+using System.Collections.Generic;
+
     /// <summary>
     /// Provides two-stage planning tools: plan_from_brief proposes a backlog and apply_plan applies it.
     /// </summary>
