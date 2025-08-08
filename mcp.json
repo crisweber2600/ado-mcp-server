@@ -1,9 +1,7 @@
 {
   "servers": {
     "AdoMcp": {
-      "type": "stdio",
-      "command": "dotnet",
-      "args": ["run", "--project", "src/Ado.Mcp"],
+      "url": "http://localhost:5088/mcp",
       "env": {
         "ADO_ORG": "myorg",
         "ADO_PROJECT": "MyProject",
@@ -12,6 +10,11 @@
     }
   },
   "inputs": [
-    { "id": "ado_pat", "type": "promptString", "description": "Azure DevOps PAT", "password": true }
+    {
+      "id": "ado_pat",
+      "type": "promptString",
+      "description": "Azure DevOps PAT",
+      "password": true
+    }
   ]
 }
