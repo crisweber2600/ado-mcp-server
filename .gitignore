@@ -1,0 +1,66 @@
+# Build outputs
+**/bin/
+**/obj/
+**/out/
+
+# Visual Studio / IDE
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.DotSettings.user
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+*.etl
+
+# Tests and coverage
+TestResults/
+**/*.trx
+*.coverage
+*.coveragexml
+.coverage
+coverage/
+CoverageResults/
+**/TestResult*.xml
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/packages/
+.packages/
+*.nuget.props
+*.nuget.targets
+
+# Local configuration (keep committed appsettings.*, but ignore developer-local variants)
+appsettings.*.local.json
+*.local.json
+secrets*.json
+
+# Environment files
+.env
+.env.*
+*.env
+
+# Azure Developer CLI / local Azure env artifacts
+.azd/
+.azure/
+
+# MCP/LLM local overrides (keep canonical mcp.json/server.json tracked)
+mcp.local.json
+server.local.json
+
+# Databases / misc
+*.sqlite
+*.db
+*.pid

@@ -1,7 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+#pragma warning disable IDE0005 // Using directive is unnecessary but included for clarity
+using Ado.Mcp.ServiceDefaults.Extensions;
+#if INCLUDE_MCP
 using ModelContextProtocol.Server;
+#endif
 
 namespace Ado.Mcp
 {
@@ -9,12 +13,18 @@ namespace Ado.Mcp
     /// Entry point for the MCP server. This version hosts the MCP server over HTTP instead
     /// of stdio so that both ChatGPT and Copilot Studio can connect via HTTP.
     /// </summary>
-    public class Program
+    public partial class Program
     {
         public static async Task Main(string[] args)
         {
-            // Use the ASP.NET Core WebApplication builder to set up an HTTP server.
-            var builder = WebApplication.CreateBuilder(args);
+            var app = BuildApp(args);
+            await app.RunAsync();
+        }
+
+        // Build the WebApplication so tests can host it with TestServer.
+    public static WebApplication BuildApp(string[]? args = null, bool useTestServer = false)
+        {
+            var builder = WebApplication.CreateBuilder(args ?? Array.Empty<string>());
 
             // Configure logging to write to stderr to align with MCP recommendations.
             builder.Logging.AddConsole(o =>
@@ -25,18 +35,37 @@ namespace Ado.Mcp
             // Register HttpClient for AdoClient to call Azure DevOps.
             builder.Services.AddHttpClient<AdoClient>();
 
-            // Register and configure the MCP server with HTTP transport and discover tools in this assembly.
-            builder.Services.AddMcpServer()
-                .WithHttpTransport()
-                .WithToolsFromAssembly();
+            // Allow a minimal mode for smoke tests, and only include MCP in Release builds.
+            var minimal = string.Equals(Environment.GetEnvironmentVariable("MCP_MINIMAL"), "1", StringComparison.Ordinal);
+#if INCLUDE_MCP
+            if (!minimal)
+            {
+                // Register and configure the MCP server with HTTP transport and discover tools in this assembly.
+                builder.Services.AddMcpServer()
+                    .WithHttpTransport()
+                    .WithToolsFromAssembly();
+            }
+#endif
+
+            // Hook in service defaults (telemetry/health placeholders via ServiceDefaults library)
+            builder.AddServiceDefaults();
 
             var app = builder.Build();
 
-            // Map MCP endpoints so that clients can discover and call the tools over HTTP.
-            app.MapMcp();
+            // Map MCP endpoints unless in minimal mode.
+#if INCLUDE_MCP
+            if (!minimal)
+            {
+                app.MapMcp();
+            }
+#endif
 
-            // Start the HTTP server. By default, this will listen on the configured URLs (e.g. http://localhost:5000).
-            await app.RunAsync();
+            // Lightweight health endpoint for smoke tests and readiness checks.
+            app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
+
+            app.UseServiceDefaults();
+
+            return app;
         }
     }
 }

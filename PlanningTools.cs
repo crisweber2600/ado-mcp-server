@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using System.Text.Json;
+#if INCLUDE_MCP
 using ModelContextProtocol.Server;
+#endif
 using Ado.Mcp.Models;
 
 namespace Ado.Mcp.Tools
@@ -10,10 +12,14 @@ using System.Collections.Generic;
     /// <summary>
     /// Provides two-stage planning tools: plan_from_brief proposes a backlog and apply_plan applies it.
     /// </summary>
+    #if INCLUDE_MCP
     [McpServerToolType]
+    #endif
     public static class PlanningTools
     {
+        #if INCLUDE_MCP
         [McpServerTool, Description("From a free-text brief, propose a backlog plan (no side effects). Returns Plan JSON.")]
+        #endif
         public static string plan_from_brief(
             [Description("Product brief as free text")] string brief,
             [Description("Default area path")] string? areaPath = null,
@@ -24,7 +30,9 @@ using System.Collections.Generic;
             return JsonSerializer.Serialize(skeleton);
         }
 
-        [McpServerTool, Description("Create a hierarchy from a Plan JSON. Returns success flag.")]
+    #if INCLUDE_MCP
+    [McpServerTool, Description("Create a hierarchy from a Plan JSON. Returns success flag.")]
+    #endif
         public static async Task<object> apply_plan(AdoClient ado, JsonElement planJson, CancellationToken ct = default)
         {
             var plan = JsonSerializer.Deserialize<Plan>(planJson)!;

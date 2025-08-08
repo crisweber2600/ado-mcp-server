@@ -8,9 +8,34 @@
   </PropertyGroup>
 
   <ItemGroup>
-        <PackageReference Include="ModelContextProtocol" Version="0.1.0-preview.14" />
-        <PackageReference Include="ModelContextProtocol.AspNetCore" Version="0.1.0-preview.14" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include=".\Ado.Mcp.ServiceDefaults\Ado.Mcp.ServiceDefaults.csproj" />
+  </ItemGroup>
+
+  <!-- Include MCP packages only in Release to avoid heavy preview dependencies during Debug/test runs -->
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <PackageReference Include="ModelContextProtocol" Version="0.1.0-preview.14" />
+    <PackageReference Include="ModelContextProtocol.AspNetCore" Version="0.1.0-preview.14" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DefineConstants>$(DefineConstants);INCLUDE_MCP</DefineConstants>
+  </PropertyGroup>
+
+  <!-- Exclude the nested test project folder from this project's compile inputs -->
+  <ItemGroup>
+    <Compile Remove="Ado.Mcp.Tests\**\*.cs" />
+    <None Remove="Ado.Mcp.Tests\**\*" />
+    <Content Remove="Ado.Mcp.Tests\**\*" />
+  <Compile Remove="Ado.Mcp.AppHost\**\*.cs" />
+  <None Remove="Ado.Mcp.AppHost\**\*" />
+  <Content Remove="Ado.Mcp.AppHost\**\*" />
+  <Compile Remove="Ado.Mcp.ServiceDefaults\**\*.cs" />
+  <None Remove="Ado.Mcp.ServiceDefaults\**\*" />
+  <Content Remove="Ado.Mcp.ServiceDefaults\**\*" />
   </ItemGroup>
 
 </Project>
