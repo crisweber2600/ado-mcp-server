@@ -1,5 +1,8 @@
 namespace Ado.Mcp.Models
 {
+
+using System.Collections.Generic;
+
     /// <summary>
     /// Strongly-typed representation of a backlog hierarchy used by the planning tools.
     /// </summary>
